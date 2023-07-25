@@ -4,6 +4,9 @@ from server.database import Post, db
 from server.logger import logger
 
 
+FRAGMENTS_TO_FIND = ["magic: the gathering", "magicthegathering"]
+
+
 def operations_callback(ops: dict) -> None:
     # Here we can filter, process, run ML classification, etc.
     # After our feed alg we can save posts into our DB
@@ -12,16 +15,15 @@ def operations_callback(ops: dict) -> None:
     # for example, let's create our custom feed that will contain all posts that contains alf related text
 
     posts_to_create = []
-    for created_post in ops['posts']['created']:
-        record = created_post['record']
+    for created_post in ops["posts"]["created"]:
+        record = created_post["record"]
 
-        # print all texts just as demo that data stream works
-        post_with_images = isinstance(record.embed, models.AppBskyEmbedImages.Main)
-        inlined_text = record.text.replace('\n', ' ')
-        logger.info(f'New post (with images: {post_with_images}): {inlined_text}')
+        is_magic = any([f in record.text.lower() for f in FRAGMENTS_TO_FIND])
 
-        # only alf-related posts
-        if 'alf' in record.text.lower():
+        # only magic-related posts
+        if is_magic:
+            logger.info("Adding post: %s", record)
+
             reply_parent = None
             if record.reply and record.reply.parent.uri:
                 reply_parent = record.reply.parent.uri
@@ -31,20 +33,20 @@ def operations_callback(ops: dict) -> None:
                 reply_root = record.reply.root.uri
 
             post_dict = {
-                'uri': created_post['uri'],
-                'cid': created_post['cid'],
-                'reply_parent': reply_parent,
-                'reply_root': reply_root,
+                "uri": created_post["uri"],
+                "cid": created_post["cid"],
+                "reply_parent": reply_parent,
+                "reply_root": reply_root,
             }
             posts_to_create.append(post_dict)
 
-    posts_to_delete = [p['uri'] for p in ops['posts']['deleted']]
+    posts_to_delete = [p["uri"] for p in ops["posts"]["deleted"]]
     if posts_to_delete:
         Post.delete().where(Post.uri.in_(posts_to_delete))
-        logger.info(f'Deleted from feed: {len(posts_to_delete)}')
+        logger.debug(f"Deleted from feed: {len(posts_to_delete)}")
 
     if posts_to_create:
         with db.atomic():
             for post_dict in posts_to_create:
                 Post.create(**post_dict)
-        logger.info(f'Added to feed: {len(posts_to_create)}')
+        logger.info(f"Added to feed: {len(posts_to_create)}")
