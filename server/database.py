@@ -2,7 +2,6 @@ from datetime import datetime
 
 import peewee
 
-
 db = peewee.SqliteDatabase('feed_database.db')
 
 

@@ -1,7 +1,7 @@
 from atproto import models
 
+from server.database import Post, db
 from server.logger import logger
-from server.database import db, Post
 
 
 def operations_callback(ops: dict) -> None:
