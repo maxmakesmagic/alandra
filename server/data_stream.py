@@ -2,12 +2,13 @@ import typing as t
 
 from atproto import CAR, AtUri, models
 from atproto.exceptions import FirehoseError
-from atproto.firehose import FirehoseSubscribeReposClient, parse_subscribe_repos_message
+from atproto.firehose import (FirehoseSubscribeReposClient,
+                              parse_subscribe_repos_message)
 from atproto.xrpc_client.models import get_or_create, is_record_type
 from atproto.xrpc_client.models.common import XrpcError
 
-from server.logger import logger
 from server.database import SubscriptionState
+from server.logger import logger
 
 if t.TYPE_CHECKING:
     from atproto.firehose import MessageFrame

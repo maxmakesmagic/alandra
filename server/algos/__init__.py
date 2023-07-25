@@ -1,5 +1,3 @@
-from . import whats_alf
+from . import alandra
 
-algos = {
-    whats_alf.uri: whats_alf.handler
-}
+algos = {alandra.uri: alandra.handler}

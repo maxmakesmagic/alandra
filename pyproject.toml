@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "alandra"
+version = "0.1.0"
+description = "BlueSky feed for Magic: the Gathering"
+authors = ["Max Dymond <maxmakesmagic@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+peewee = "^3.16.2"
+Flask = "^2.3.2"
+python-dotenv = "^1.0.0"
+atproto = "^0.0.23"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
