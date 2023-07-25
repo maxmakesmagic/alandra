@@ -33,9 +33,6 @@ pip install -r requirements.txt
 
 Copy `.env.example` as `.env`. Fill the variables.
 
-> **Note**
-> To get value for "WHATS_ALF_URI" you should publish the feed first. 
-
 Run development flask server:
 ```shell
 flask run
@@ -46,7 +43,7 @@ Run development server with debug:
 flask --debug run
 ```
 > **Note**
-> Duplication of data stream instances in debug mode is fine. 
+> Duplication of data stream instances in debug mode is fine.
 > Read warn below.
 
 > **Warning**
