@@ -1,8 +1,20 @@
 from datetime import datetime
+import os
 
 import peewee
 
-db = peewee.SqliteDatabase('feed_database.db')
+# Set the path to the SSL CA certificate to use
+cacert = os.path.join(os.path.dirname(__file__), "DigiCertGlobalRootG2.crt")
+
+# db = peewee.SqliteDatabase("feed_database.db")
+db = peewee.MySQLDatabase(
+    os.environ["DATABASE_DB"],
+    user=os.environ["DATABASE_USER"],
+    password=os.environ["DATABASE_PASSWORD"],
+    host=os.environ["DATABASE_HOST"],
+    ssl_disabled=False,
+    ssl_ca=cacert,
+)
 
 
 class BaseModel(peewee.Model):
