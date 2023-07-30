@@ -1,19 +1,16 @@
+import logging
 from datetime import datetime
 from typing import Optional
 
 from server import config
 from server.database import Post
 
+log = logging.getLogger(__name__)
 uri = config.ALANDRA_URI
 
 
 def handler(cursor: Optional[str], limit: int) -> dict:
-    posts = (
-        Post.select()
-        .order_by(Post.indexed_at.desc())
-        .order_by(Post.cid.desc())
-        .limit(limit)
-    )
+    posts = Post.select().order_by(Post.indexed_at.desc(), Post.cid.desc()).limit(limit)
 
     if cursor:
         cursor_parts = cursor.split("::")
