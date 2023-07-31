@@ -16,13 +16,23 @@ class PostClassifier:
 
     @ttl_cache(ttl=300)
     def tracked_dids(self) -> Set[str]:
-        return set([e["DID"] for e in self.users_client.list_entities()])
+        dids = set([e["DID"] for e in self.users_client.list_entities()])
+        logger.info("Retrieved %d DIDs: %s", len(dids), dids)
+        return dids
 
     def callback(self, ops: dict) -> None:
         posts_to_create = []
         if ops["posts"]["created"]:
             # Get the tracked user DIDs
             tracked_dids = self.tracked_dids()
+
+            authors = set([c["author"] for c in ops["posts"]["created"]])
+            logger.info(
+                "Received data on %d authors:\n%s\nintersection:\n%s\n---",
+                len(authors),
+                authors,
+                authors.intersection(tracked_dids),
+            )
 
             # Here we can filter, process, run ML classification, etc.
             # After our feed alg we can save posts into our DB
