@@ -26,14 +26,6 @@ class PostClassifier:
             # Get the tracked user DIDs
             tracked_dids = self.tracked_dids()
 
-            authors = set([c["author"] for c in ops["posts"]["created"]])
-            logger.info(
-                "Received data on %d authors:\n%s\nintersection:\n%s\n---",
-                len(authors),
-                authors,
-                authors.intersection(tracked_dids),
-            )
-
             # Here we can filter, process, run ML classification, etc.
             # After our feed alg we can save posts into our DB
             # Also, we should process deleted posts to remove them from our DB and keep it in sync
